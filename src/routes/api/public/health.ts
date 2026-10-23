@@ -15,10 +15,15 @@ export const Route = createFileRoute("/api/public/health")({
           (has("SANORA_SUPABASE_SERVICE_ROLE_KEY") ||
             has("SUPABASE_SERVICE_ROLE_KEY") ||
             has("SANORA_AUTH_SERVICE_ROLE_KEY"));
+
+        const g = globalThis as unknown as { __env__?: Record<string, unknown> };
+        const envKeys = Object.keys(g.__env__ ?? {}).filter((k) => k !== "ASSETS");
+
         const body = {
           app: "sanora",
           payments: Boolean(db && (has("RAZORPAY_KEY_ID") || true) && has("RAZORPAY_KEY_SECRET")),
           coupons: Boolean(db),
+          env_keys: envKeys,
         };
         return new Response(JSON.stringify(body), {
           status: 200,
