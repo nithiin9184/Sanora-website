@@ -8,8 +8,8 @@ export const Route = createFileRoute("/api/public/health")({
         return new Response(null, { status: 204, headers: corsHeaders(request) });
       },
       GET: async ({ request }) => {
-        const { corsHeaders } = await import("@/lib/sanora.server");
-        const has = (k: string) => !!process.env[k]?.trim();
+        const { corsHeaders, getServerEnv } = await import("@/lib/sanora.server");
+        const has = (k: string) => !!getServerEnv(k)?.trim();
         const db =
           (has("SANORA_SUPABASE_URL") || has("SUPABASE_URL") || has("VITE_SUPABASE_URL") || true) &&
           (has("SANORA_SUPABASE_SERVICE_ROLE_KEY") ||

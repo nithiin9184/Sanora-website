@@ -18,6 +18,26 @@ async function getServerEntry(): Promise<ServerEntry> {
   return serverEntryPromise;
 }
 
+function syncEnv(env: unknown) {
+  if (!env || typeof env !== "object") return;
+  try {
+    const target =
+      (globalThis as any).process?.env ||
+      ((globalThis as any).process = { env: {} }).env;
+    for (const [k, v] of Object.entries(env as Record<string, unknown>)) {
+      if (typeof v === "string") {
+        target[k] = v;
+      }
+    }
+  } catch {}
+  try {
+    (globalThis as any).__env__ = {
+      ...((globalThis as any).__env__ || {}),
+      ...(env as Record<string, unknown>),
+    };
+  } catch {}
+}
+
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
@@ -46,6 +66,7 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    syncEnv(env);
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

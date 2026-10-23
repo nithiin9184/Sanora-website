@@ -1,6 +1,9 @@
 {
   "name": "sanora-website",
   "compatibility_date": "2026-10-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "main": "dist/server/index.mjs",
   "assets": {
     "directory": "dist/client"

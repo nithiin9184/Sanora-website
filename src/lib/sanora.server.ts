@@ -2,24 +2,36 @@ import { createClient } from "@supabase/supabase-js";
 
 const DEFAULT_SUPABASE_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co";
 
+/** Reads an environment variable or Cloudflare worker secret safely across runtimes. */
+export function getServerEnv(key: string): string | undefined {
+  if (typeof process !== "undefined" && process.env?.[key]?.trim()) {
+    return process.env[key]!.trim();
+  }
+  const g = globalThis as unknown as { __env__?: Record<string, unknown> };
+  if (g.__env__ && typeof g.__env__[key] === "string" && (g.__env__[key] as string).trim()) {
+    return (g.__env__[key] as string).trim();
+  }
+  return undefined;
+}
+
 /** Service-role client for the SANORA mobile app database. Server-only. */
 export function sanoraAdmin() {
   const url =
-    process.env["SANORA_SUPABASE_URL"] ||
-    process.env["SUPABASE_URL"] ||
-    process.env["VITE_SUPABASE_URL"] ||
+    getServerEnv("SANORA_SUPABASE_URL") ||
+    getServerEnv("SUPABASE_URL") ||
+    getServerEnv("VITE_SUPABASE_URL") ||
     DEFAULT_SUPABASE_URL;
   const key =
-    process.env["SANORA_SUPABASE_SERVICE_ROLE_KEY"] ||
-    process.env["SUPABASE_SERVICE_ROLE_KEY"] ||
-    process.env["SANORA_AUTH_SERVICE_ROLE_KEY"];
+    getServerEnv("SANORA_SUPABASE_SERVICE_ROLE_KEY") ||
+    getServerEnv("SUPABASE_SERVICE_ROLE_KEY") ||
+    getServerEnv("SANORA_AUTH_SERVICE_ROLE_KEY");
   if (!url || !key) throw new Error("Payment service is not configured");
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
 export function razorpayKeys() {
-  const id = process.env["RAZORPAY_KEY_ID"] || "rzp_live_Tqo5UNYbDxV2gX";
-  const secret = process.env["RAZORPAY_KEY_SECRET"];
+  const id = getServerEnv("RAZORPAY_KEY_ID") || "rzp_live_Tqo5UNYbDxV2gX";
+  const secret = getServerEnv("RAZORPAY_KEY_SECRET");
   if (!id || !secret) throw new Error("Payment service is not configured");
   return { id, secret };
 }
