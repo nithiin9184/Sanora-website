@@ -1,15 +1,24 @@
 import { createClient } from "@supabase/supabase-js";
 
+const DEFAULT_SUPABASE_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co";
+
 /** Service-role client for the SANORA mobile app database. Server-only. */
 export function sanoraAdmin() {
-  const url = process.env["SANORA_SUPABASE_URL"];
-  const key = process.env["SANORA_SUPABASE_SERVICE_ROLE_KEY"];
+  const url =
+    process.env["SANORA_SUPABASE_URL"] ||
+    process.env["SUPABASE_URL"] ||
+    process.env["VITE_SUPABASE_URL"] ||
+    DEFAULT_SUPABASE_URL;
+  const key =
+    process.env["SANORA_SUPABASE_SERVICE_ROLE_KEY"] ||
+    process.env["SUPABASE_SERVICE_ROLE_KEY"] ||
+    process.env["SANORA_AUTH_SERVICE_ROLE_KEY"];
   if (!url || !key) throw new Error("Payment service is not configured");
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
 export function razorpayKeys() {
-  const id = process.env["RAZORPAY_KEY_ID"];
+  const id = process.env["RAZORPAY_KEY_ID"] || "rzp_live_Tqo5UNYbDxV2gX";
   const secret = process.env["RAZORPAY_KEY_SECRET"];
   if (!id || !secret) throw new Error("Payment service is not configured");
   return { id, secret };
@@ -51,8 +60,34 @@ export async function requireUser(request: Request) {
   return error || !data.user ? null : data.user;
 }
 
-export type CouponRow = { code: string; discount_percent: number; max_redemptions: number; redeemed_count: number; plan_ids: string[] | null; active: boolean };
+export type CouponRow = {
+  code: string;
+  discount_percent: number;
+  max_uses: number;
+  used_count: number;
+  max_redemptions: number;
+  redeemed_count: number;
+  plan_ids: string[] | null;
+  active: boolean;
+};
+
 export async function findCoupon(code: string) {
-  const { data } = await sanoraAdmin().from("coupons").select("code, discount_percent, max_redemptions, redeemed_count, plan_ids, active").eq("code", code.trim().toUpperCase()).maybeSingle();
-  return (data as CouponRow | null) ?? null;
+  const { data, error } = await sanoraAdmin()
+    .from("coupons")
+    .select("code, discount_percent, max_uses, used_count, active")
+    .eq("code", code.trim().toUpperCase())
+    .maybeSingle();
+  if (error || !data) return null;
+  const max = data.max_uses ?? 500;
+  const used = data.used_count ?? 0;
+  return {
+    code: data.code,
+    discount_percent: data.discount_percent,
+    max_uses: max,
+    used_count: used,
+    max_redemptions: max,
+    redeemed_count: used,
+    plan_ids: ["pro-1m", "pro-2m", "pro-3m"],
+    active: data.active,
+  } as CouponRow;
 }

@@ -46,7 +46,7 @@ export const Route = createFileRoute("/api/public/razorpay/verify-payment")({
           });
           if (subErr) { console.error(subErr); return s.json(request, { error: "Couldn't save subscription" }, 500); }
           await db.from("profiles").update({ plan_id: planId.data, plan_expires_at: expiresAt }).eq("id", user.id);
-          if (order.notes?.coupon) await db.rpc("redeem_coupon", { p_code: order.notes.coupon });
+          if (order.notes?.coupon) await db.rpc("redeem_coupon", { p_code: order.notes.coupon, p_user: user.id, p_reference: paymentId });
 
           return s.json(request, { ok: true, planId: planId.data, expiresAt });
         } catch (e) {

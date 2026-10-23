@@ -14,6 +14,7 @@ import { Route as DmcaRouteImport } from './routes/dmca'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as LegalPageRouteImport } from './routes/legal.$page'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicCouponsCodeRouteImport } from './routes/api/public/coupons.$code'
 import { Route as ApiPublicRazorpayCreateOrderRouteImport } from './routes/api/public/razorpay/create-order'
 import { Route as ApiPublicRazorpayVerifyPaymentRouteImport } from './routes/api/public/razorpay/verify-payment'
@@ -43,6 +44,11 @@ const LegalPageRoute = LegalPageRouteImport.update({
   path: '/legal/$page',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicCouponsCodeRoute = ApiPublicCouponsCodeRouteImport.update({
   id: '/api/public/coupons/$code',
   path: '/api/public/coupons/$code',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/legal/$page': typeof LegalPageRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/coupons/$code': typeof ApiPublicCouponsCodeRoute
   '/api/public/razorpay/create-order': typeof ApiPublicRazorpayCreateOrderRoute
   '/api/public/razorpay/verify-payment': typeof ApiPublicRazorpayVerifyPaymentRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/legal/$page': typeof LegalPageRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/coupons/$code': typeof ApiPublicCouponsCodeRoute
   '/api/public/razorpay/create-order': typeof ApiPublicRazorpayCreateOrderRoute
   '/api/public/razorpay/verify-payment': typeof ApiPublicRazorpayVerifyPaymentRoute
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/legal/$page': typeof LegalPageRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/coupons/$code': typeof ApiPublicCouponsCodeRoute
   '/api/public/razorpay/create-order': typeof ApiPublicRazorpayCreateOrderRoute
   '/api/public/razorpay/verify-payment': typeof ApiPublicRazorpayVerifyPaymentRoute
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-of-service'
     | '/legal/$page'
+    | '/api/public/health'
     | '/api/public/coupons/$code'
     | '/api/public/razorpay/create-order'
     | '/api/public/razorpay/verify-payment'
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-of-service'
     | '/legal/$page'
+    | '/api/public/health'
     | '/api/public/coupons/$code'
     | '/api/public/razorpay/create-order'
     | '/api/public/razorpay/verify-payment'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-of-service'
     | '/legal/$page'
+    | '/api/public/health'
     | '/api/public/coupons/$code'
     | '/api/public/razorpay/create-order'
     | '/api/public/razorpay/verify-payment'
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   LegalPageRoute: typeof LegalPageRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicCouponsCodeRoute: typeof ApiPublicCouponsCodeRoute
   ApiPublicRazorpayCreateOrderRoute: typeof ApiPublicRazorpayCreateOrderRoute
   ApiPublicRazorpayVerifyPaymentRoute: typeof ApiPublicRazorpayVerifyPaymentRoute
@@ -173,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalPageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/coupons/$code': {
       id: '/api/public/coupons/$code'
       path: '/api/public/coupons/$code'
@@ -203,6 +223,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   LegalPageRoute: LegalPageRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicCouponsCodeRoute: ApiPublicCouponsCodeRoute,
   ApiPublicRazorpayCreateOrderRoute: ApiPublicRazorpayCreateOrderRoute,
   ApiPublicRazorpayVerifyPaymentRoute: ApiPublicRazorpayVerifyPaymentRoute,
