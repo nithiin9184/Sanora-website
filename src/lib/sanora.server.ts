@@ -34,6 +34,73 @@ export function razorpayKeys() {
   return { id, secret };
 }
 
+export function getRazorpayWebhookSecret(): string | undefined {
+  return getServerEnv("RAZORPAY_WEBHOOK_SECRET");
+}
+
+export function getRazorpayKeySecret(): string | undefined {
+  return getServerEnv("RAZORPAY_KEY_SECRET");
+}
+
+const enc = new TextEncoder();
+
+export async function hmacHex(secret: string, message: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let r = 0;
+  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return r === 0;
+}
+
+const ORIGINS = [
+  "https://sanoramusic.in",
+  "https://www.sanoramusic.in",
+  "capacitor://localhost",
+  "http://localhost",
+  "https://localhost",
+  "ionic://localhost",
+];
+
+export function corsHeaders(request: Request): Record<string, string> {
+  const origin = request.headers.get("origin") ?? "";
+  return {
+    "Access-Control-Allow-Origin": ORIGINS.includes(origin) ? origin : "https://sanoramusic.in",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
+  };
+}
+
+export function json(request: Request, body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      ...corsHeaders(request),
+    },
+  });
+}
+
+/** Verifies the app user's bearer token against the SANORA auth service. */
+export async function requireUser(request: Request) {
+  const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  if (!token) return null;
+  const { data, error } = await sanoraAdmin().auth.getUser(token);
+  return error || !data.user ? null : data.user;
+}
+
 export interface CouponRow {
   code: string;
   discount_percent: number;
@@ -84,25 +151,4 @@ export async function redeemCouponInDb(code: string, userId: string, reference?:
     throw new Error(error.message);
   }
   return typeof data === "number" ? data : null;
-}
-
-export function corsHeaders(request: Request) {
-  const origin = request.headers.get("origin") || "https://sanoramusic.in";
-  return {
-    "access-control-allow-origin": origin,
-    vary: "Origin",
-    "access-control-allow-headers": "Content-Type, Authorization",
-    "access-control-allow-methods": "GET, POST, OPTIONS",
-    "access-control-max-age": "86400",
-  };
-}
-
-export function json(request: Request, body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "content-type": "application/json",
-      ...corsHeaders(request),
-    },
-  });
 }
