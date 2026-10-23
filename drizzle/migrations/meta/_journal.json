@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792737970837,
+      "tag": "0000_create_reviews",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792749924749,
+      "tag": "0001_track_apk_download_actions",
+      "breakpoints": true
+    }
+  ]
+}
