@@ -13,7 +13,11 @@ export const Route = createFileRoute("/api/public/coupons/$code")({
         const code = z.string().regex(/^[A-Za-z0-9_-]{1,40}$/).safeParse(params.code);
         if (!code.success) return s.json(request, { error: "Invalid code" }, 400);
         try {
-          const c = await s.findCoupon(code.data);
+          const res = await s.findCoupon(code.data);
+          if (res && "db_error" in res) {
+            return s.json(request, { error: "Database error", message: res.db_error }, 500);
+          }
+          const c = res?.coupon;
           if (!c || !c.active) return s.json(request, { error: "Not found" }, 404);
           return s.json(request, {
             code: c.code,
@@ -24,8 +28,7 @@ export const Route = createFileRoute("/api/public/coupons/$code")({
             planIds: c.plan_ids ?? ["pro-1m"],
           });
         } catch (e: any) {
-          console.error("coupon endpoint error:", e);
-          return s.json(request, { error: "Unavailable", message: e?.message ?? "Database error" }, 503);
+          return s.json(request, { error: "Unavailable", message: e?.message }, 503);
         }
       },
     },
