@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PLAN_IDS, expiryFrom, type PlanId } from "@/lib/pricing";
 
 export const Route = createFileRoute("/api/public/razorpay/webhook")({
   server: {
@@ -20,6 +19,8 @@ export const Route = createFileRoute("/api/public/razorpay/webhook")({
 
         const rawBody = await request.text();
         const webhookSecret =
+          s.getRazorpayWebhookSecret() ||
+          s.getRazorpayKeySecret() ||
           s.getServerEnv("RAZORPAY_WEBHOOK_SECRET") ||
           s.getServerEnv("RAZORPAY_KEY_SECRET");
 
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/api/public/razorpay/webhook")({
           });
         }
 
-        let event: { event?: string; payload?: Record<string, any> };
+        let event: any;
         try {
           event = JSON.parse(rawBody);
         } catch {
@@ -49,95 +50,74 @@ export const Route = createFileRoute("/api/public/razorpay/webhook")({
           });
         }
 
-        const eventType = event.event;
-        if (eventType !== "payment.captured" && eventType !== "order.paid") {
-          return new Response(JSON.stringify({ status: "ignored", event: eventType }), {
+        const evType = event?.event;
+        if (evType !== "order.paid" && evType !== "payment.captured") {
+          return new Response(JSON.stringify({ received: true, ignored: evType }), {
             status: 200,
             headers: { "content-type": "application/json" },
           });
         }
 
-        const payment = event.payload?.payment?.entity;
-        const order = event.payload?.order?.entity;
+        const payment = event?.payload?.payment?.entity;
+        const order = event?.payload?.order?.entity;
+        const notes = payment?.notes ?? order?.notes ?? {};
 
-        const notes = payment?.notes || order?.notes || {};
-        const userId = notes.userId || notes.user_id;
-        const planId = (notes.planId || notes.plan_id) as PlanId | undefined;
-        const coupon = notes.coupon || notes.coupon_code;
-
-        const orderId = payment?.order_id || order?.id;
+        const userId = notes.user_id;
+        const planId = notes.plan_id;
+        const couponCode = notes.coupon_code;
+        const orderId = order?.id ?? payment?.order_id;
         const paymentId = payment?.id;
         const amount = payment?.amount ?? order?.amount ?? 0;
 
-        if (!userId || !planId || !PLAN_IDS.includes(planId)) {
-          console.warn("Webhook event missing required notes (userId / planId):", { eventType, notes });
-          return new Response(JSON.stringify({ status: "missing_metadata" }), {
+        if (!userId || !planId) {
+          console.warn("Webhook received payment without user_id / plan_id in notes", { orderId, paymentId });
+          return new Response(JSON.stringify({ received: true, missing_notes: true }), {
             status: 200,
             headers: { "content-type": "application/json" },
           });
         }
 
         try {
-          const db = s.sanoraAdmin();
-          if (paymentId) {
-            const { data: existing } = await db
-              .from("subscriptions")
-              .select("id, status")
-              .eq("razorpay_payment_id", paymentId)
-              .maybeSingle();
-
-            if (existing) {
-              return new Response(JSON.stringify({ status: "already_processed" }), {
-                status: 200,
-                headers: { "content-type": "application/json" },
-              });
-            }
-          }
-
-          const expiresAt = expiryFrom(planId).toISOString();
-          const { error: subErr } = await db.from("subscriptions").insert({
+          const admin = s.sanoraAdmin();
+          const { error: subErr } = await admin.from("subscriptions").insert({
             user_id: userId,
             plan_id: planId,
-            amount: amount,
-            coupon_code: coupon || null,
-            razorpay_order_id: orderId || null,
-            razorpay_payment_id: paymentId || `wh_${Date.now()}`,
             status: "active",
-            expires_at: expiresAt,
+            amount_inr: Math.round(Number(amount) / 100),
+            provider: "razorpay",
+            provider_order_id: orderId ?? null,
+            provider_payment_id: paymentId ?? null,
           });
+          if (subErr) console.error("Webhook subscription insert error:", subErr);
 
-          if (subErr) {
-            console.error("Webhook insert subscription error:", subErr);
-            return new Response(JSON.stringify({ error: "Database error" }), {
-              status: 500,
-              headers: { "content-type": "application/json" },
-            });
-          }
+          const { expiryFrom } = await import("@/lib/pricing");
+          const expiresAt = expiryFrom(planId).toISOString();
 
-          await db
+          await admin
             .from("profiles")
-            .update({ plan_id: planId, plan_expires_at: expiresAt })
+            .update({
+              is_pro: true,
+              pro_plan_id: planId,
+              pro_expires_at: expiresAt,
+              auto_renew: false,
+            })
             .eq("id", userId);
 
-          if (coupon && paymentId) {
+          if (couponCode && typeof couponCode === "string") {
             try {
-              await db.rpc("redeem_coupon", {
-                p_code: coupon,
-                p_user: userId,
-                p_reference: paymentId,
-              });
-            } catch (couponErr) {
-              console.warn("Webhook coupon redemption failed:", couponErr);
+              await s.redeemCouponInDb(couponCode, userId, orderId ?? paymentId);
+            } catch (err) {
+              console.warn("Webhook coupon redeem error:", err);
             }
           }
 
-          return new Response(JSON.stringify({ status: "ok", userId, planId, expiresAt }), {
+          return new Response(JSON.stringify({ received: true, activated: true, user_id: userId }), {
             status: 200,
             headers: { "content-type": "application/json" },
           });
-        } catch (err) {
-          console.error("Webhook handler error:", err);
-          return new Response(JSON.stringify({ error: "Internal error" }), {
+        } catch (err: any) {
+          console.error("Webhook processing error:", err);
+          return new Response(JSON.stringify({ error: "Processing failed", detail: err?.message }), {
             status: 500,
             headers: { "content-type": "application/json" },
           });

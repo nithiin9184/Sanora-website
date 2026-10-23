@@ -8,18 +8,14 @@ export const Route = createFileRoute("/api/public/health")({
         return new Response(null, { status: 204, headers: corsHeaders(request) });
       },
       GET: async ({ request }) => {
-        const { corsHeaders, getServerEnv } = await import("@/lib/sanora.server");
-        const has = (k: string) => !!getServerEnv(k)?.trim();
-        const db =
-          (has("SANORA_SUPABASE_URL") || has("SUPABASE_URL") || has("VITE_SUPABASE_URL") || true) &&
-          (has("SANORA_SUPABASE_SERVICE_ROLE_KEY") ||
-            has("SUPABASE_SERVICE_ROLE_KEY") ||
-            has("SANORA_AUTH_SERVICE_ROLE_KEY"));
+        const { corsHeaders, getSupabaseServiceKey, getRazorpayKeySecret } = await import("@/lib/sanora.server");
+        const hasDb = Boolean(getSupabaseServiceKey());
+        const hasRazorpay = Boolean(getRazorpayKeySecret());
 
         const body = {
           app: "sanora",
-          payments: Boolean(db && (has("RAZORPAY_KEY_ID") || true) && has("RAZORPAY_KEY_SECRET")),
-          coupons: Boolean(db),
+          payments: hasDb && hasRazorpay,
+          coupons: hasDb,
         };
         return new Response(JSON.stringify(body), {
           status: 200,
