@@ -18,11 +18,20 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   }
 });
 
+const NATIVE_APP_ORIGINS = [
+  "https://localhost",
+  "capacitor://localhost",
+  "http://localhost",
+  "ionic://localhost",
+];
+
 // Start installs this automatically when src/start.ts is absent; defining the
 // file opts out, so re-add it explicitly to keep server functions protected
-// from cross-site requests.
+// from cross-site requests while permitting native Capacitor/Android app origins.
 const csrfMiddleware = createCsrfMiddleware({
-  filter: (ctx) => ctx.handlerType === "serverFn",
+  filter: (ctx) =>
+    ctx.handlerType === "serverFn" &&
+    !NATIVE_APP_ORIGINS.includes(ctx.request.headers.get("Origin") ?? ""),
 });
 
 export const startInstance = createStart(() => ({
