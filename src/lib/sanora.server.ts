@@ -1,8 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
-const DEFAULT_SUPABASE_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co";
+export const DEFAULT_SUPABASE_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co";
 
-/** Reads an environment variable or Cloudflare worker secret safely across runtimes. */
 export function getServerEnv(key: string): string | undefined {
   if (typeof process !== "undefined" && process.env?.[key]?.trim()) {
     return process.env[key]!.trim();
@@ -14,7 +13,6 @@ export function getServerEnv(key: string): string | undefined {
   return undefined;
 }
 
-/** Service-role client for the SANORA mobile app database. Server-only. */
 export function sanoraAdmin() {
   const url =
     getServerEnv("SANORA_SUPABASE_URL") ||
@@ -36,62 +34,30 @@ export function razorpayKeys() {
   return { id, secret };
 }
 
-const enc = new TextEncoder();
-export async function hmacHex(secret: string, message: string) {
-  const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
-  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-export function safeEqual(a: string, b: string) {
-  if (a.length !== b.length) return false;
-  let r = 0;
-  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return r === 0;
-}
-
-const ORIGINS = ["https://sanoramusic.in", "https://www.sanoramusic.in", "capacitor://localhost", "http://localhost", "https://localhost", "ionic://localhost"];
-export function corsHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get("origin") ?? "";
-  return {
-    "Access-Control-Allow-Origin": ORIGINS.includes(origin) ? origin : "https://sanoramusic.in",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Max-Age": "86400",
-    Vary: "Origin",
-  };
-}
-export function json(request: Request, body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json", ...corsHeaders(request) } });
-}
-
-/** Verifies the app user's bearer token against the SANORA auth service. */
-export async function requireUser(request: Request) {
-  const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-  if (!token) return null;
-  const { data, error } = await sanoraAdmin().auth.getUser(token);
-  return error || !data.user ? null : data.user;
-}
-
-export type CouponRow = {
+export interface CouponRow {
   code: string;
   discount_percent: number;
   max_uses: number;
   used_count: number;
   max_redemptions: number;
   redeemed_count: number;
-  plan_ids: string[] | null;
+  plan_ids: string[];
   active: boolean;
-};
+}
 
 export async function findCoupon(code: string) {
   const { data, error } = await sanoraAdmin()
     .from("coupons")
-    .select("code, discount_percent, max_uses, used_count, active")
+    .select("*")
     .eq("code", code.trim().toUpperCase())
     .maybeSingle();
-  if (error || !data) return null;
-  const max = data.max_uses ?? 500;
-  const used = data.used_count ?? 0;
+  if (error) {
+    console.error("findCoupon DB error:", error);
+    throw new Error(error.message);
+  }
+  if (!data) return null;
+  const max = data.max_uses ?? data.max_redemptions ?? 500;
+  const used = data.used_count ?? data.redeemed_count ?? 0;
   return {
     code: data.code,
     discount_percent: data.discount_percent,
@@ -99,7 +65,42 @@ export async function findCoupon(code: string) {
     used_count: used,
     max_redemptions: max,
     redeemed_count: used,
-    plan_ids: ["pro-1m", "pro-2m", "pro-3m"],
-    active: data.active,
+    plan_ids: ["pro-1m"],
+    active: data.active ?? true,
   } as CouponRow;
+}
+
+export async function redeemCouponInDb(code: string, userId: string, reference?: string) {
+  const admin = sanoraAdmin();
+  const { data, error } = await admin.rpc("redeem_coupon", {
+    p_code: code.trim().toUpperCase(),
+    p_user: userId,
+    p_reference: reference ?? null,
+  });
+  if (error) {
+    console.error("redeem_coupon RPC error:", error);
+    throw new Error(error.message);
+  }
+  return typeof data === "number" ? data : null;
+}
+
+export function corsHeaders(request: Request) {
+  const origin = request.headers.get("origin") || "https://sanoramusic.in";
+  return {
+    "access-control-allow-origin": origin,
+    vary: "Origin",
+    "access-control-allow-headers": "Content-Type, Authorization",
+    "access-control-allow-methods": "GET, POST, OPTIONS",
+    "access-control-max-age": "86400",
+  };
+}
+
+export function json(request: Request, body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "content-type": "application/json",
+      ...corsHeaders(request),
+    },
+  });
 }

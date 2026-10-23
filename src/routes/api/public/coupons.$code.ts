@@ -15,9 +15,17 @@ export const Route = createFileRoute("/api/public/coupons/$code")({
         try {
           const c = await s.findCoupon(code.data);
           if (!c || !c.active) return s.json(request, { error: "Not found" }, 404);
-          return s.json(request, { code: c.code, discountPercent: c.discount_percent, claimed: c.redeemed_count, total: c.max_redemptions, remaining: Math.max(0, c.max_redemptions - c.redeemed_count), planIds: c.plan_ids ?? [] });
-        } catch {
-          return s.json(request, { error: "Unavailable" }, 503);
+          return s.json(request, {
+            code: c.code,
+            discountPercent: c.discount_percent,
+            claimed: c.redeemed_count,
+            total: c.max_redemptions,
+            remaining: Math.max(0, c.max_redemptions - c.redeemed_count),
+            planIds: c.plan_ids ?? ["pro-1m"],
+          });
+        } catch (e: any) {
+          console.error("coupon endpoint error:", e);
+          return s.json(request, { error: "Unavailable", message: e?.message ?? "Database error" }, 503);
         }
       },
     },
