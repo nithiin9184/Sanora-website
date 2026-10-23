@@ -8,5 +8,6 @@
   "assets": {
     "directory": "dist/client"
   },
-  "no_bundle": true
+  "no_bundle": true,
+  "keep_vars": true
 }
