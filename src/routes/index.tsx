@@ -29,10 +29,10 @@ export const Route = createFileRoute("/")({
   notFoundComponent: () => <p className="p-6 text-center">SANORA Music page not found.</p>,
   head: () => ({
     meta: [
-      { title: "SANORA Music — Studio Audio & Universal Playlists. Download APK" },
-      { name: "description", content: "Next-gen audiophile music streamer with studio DSP and universal playlist import. Download the SANORA APK." },
-      { property: "og:title", content: "SANORA Music — High-Res Studio Audio" },
-      { property: "og:description", content: "Studio DSP, AMOLED black, and one-click playlist import from Spotify, Apple Music & more." },
+      { title: "SANORA Music — Android Music Player & Metadata Manager" },
+      { name: "description", content: "Open Android audio player with built-in 10-band equalizer, gapless playback, and public playlist metadata import." },
+      { property: "og:title", content: "SANORA Music — Android Audio Player & Equalizer" },
+      { property: "og:description", content: "Custom equalizer DSP, background playback, and playlist metadata organizing tool for Android." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -123,22 +123,22 @@ const brands = [
 const APP_VERSION = "6.1.1";
 
 const guide = [
-  ["Download the APK", "Tap Download App to get the direct package file.", g1],
-  ["Confirm Download", "Tap Download to save the package to your device.", g2],
-  ["Allow Installation", "If prompted by Android, allow package installation in Settings.", g3],
-  ["Install & Launch", "Tap Install to complete setup and launch SANORA Music.", g4],
+  ["Download APK Package", "Tap Download App to save the Android application package (APK) directly to your device.", g1],
+  ["Confirm Browser Download", "Android browsers show a standard confirmation for direct APK files. Tap Download to proceed.", g2],
+  ["Standard Android Permission", "If installing an APK for the first time from your browser, enable the standard 'Install unknown apps' permission.", g3],
+  ["Complete Installation", "Tap Install to finish setup and open SANORA Music.", g4],
 ];
 
 const features = [
-  [Sliders, "10-Band Parametric Equalizer", "Real-time Web Audio DSP from 32Hz to 16kHz for audiophile acoustic tuning."],
-  [Waves, "Deep Bass Boost & Lo-Fi Warmth", "Hardware-calibrated low-shelf punch and vintage analog tape saturation."],
-  [Headphones, "320kbps High-Res Audio", "Studio-grade 320kbps streaming with real-time dynamic bitrate switching."],
-  [Shuffle, "Seamless Crossfades", "Apple Music-style smooth gapless playback and natural track transitions."],
-  [Sparkles, "Ambient Player Glow", "Full-screen player with responsive, synchronized album art lighting."],
-  [Mic2, "Synchronized Real-time Lyrics", "Millisecond-accurate live scrolling with dynamic line tracking."],
-  [Moon, "AMOLED Pure Black", "100% battery-saving OLED black mode engineered for modern displays."],
-  [DownloadCloud, "Smart Offline Cache", "Instant offline downloads with granular storage tracking and complete cache purge."],
-  [Bluetooth, "Bluetooth Route & Battery Display", "Real-time earbud battery percentage and high-resolution codec routing."],
+  [Sliders, "10-Band Audio Equalizer", "Custom DSP equalizer curve from 32Hz to 16kHz for personalized audio tuning."],
+  [Waves, "Bass Boost & Sound Shaping", "Configurable low-end boost and custom tone profiles tailored to your earphones."],
+  [Headphones, "High-Bitrate Audio Playback", "Dynamic bitrate playback stream with adaptive buffer management."],
+  [Shuffle, "Gapless Transitions", "Smooth crossfade and gapless playback between consecutive queue tracks."],
+  [Sparkles, "Responsive Player UI", "Dynamic backdrop accents adapting to the current track artwork."],
+  [Mic2, "Synchronized Lyrics", "Real-time scrolling lyrics synced to playback timestamps where available."],
+  [Moon, "Dark Mode Theme", "Battery-friendly pure black theme optimized for OLED and AMOLED screens."],
+  [DownloadCloud, "Local Storage Caching", "Save tracks to your device storage cache for uninterrupted offline listening."],
+  [Bluetooth, "Audio Output Management", "Seamless switching across Bluetooth headsets and system output devices."],
 ] as const;
 
 type Review = { name: string; rating: number; text: string };
@@ -228,9 +228,10 @@ function Reviews() {
 }
 
 const faqs = [
-  ["Is SANORA free to use?", "Yes. SANORA Music gives free access to stream music and create playlists."],
-  ["How does the universal playlist import work?", "Paste a playlist link or connect your account. SANORA migrates titles, artists and metadata in one click and matches them to its catalogue — no audio transcoding involved."],
-  ["Will my downloaded songs and playlists stay safe across updates?", "Yes. Installing a newer APK over the existing app keeps all your downloads, playlists and settings intact."],
+  ["What is SANORA Music?", "SANORA Music is an independent Android audio player and media organizer that plays public audio streams and lets you organize personal playlists with a custom equalizer."],
+  ["How does playlist metadata import work?", "Paste a public playlist URL from supported streaming platforms. SANORA reads the song titles and artist names, creating a matching playlist in your local library. It does not transfer or convert audio files from third-party services."],
+  ["Why is SANORA distributed via direct APK?", "SANORA is currently provided as a direct Android APK package for beta testing and independent distribution directly to listeners without store intermediaries."],
+  ["Are downloaded songs and settings preserved during updates?", "Yes. Installing an updated APK package over an existing installation retains your local cache, playlists, and equalizer presets."],
 ];
 
 function Faq() {
@@ -252,7 +253,7 @@ function Faq() {
           <span className="font-mono text-sm font-semibold">Version {APP_VERSION}</span>
           <span className="text-xs text-muted-foreground">Release: October 2026</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 release with 320kbps High-Res audio, Apple Music-style crossfades, ambient player glow, smart cache manager, and studio equalizer.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 update featuring 10-band equalizer DSP, gapless track transitions, adaptive player UI, and offline storage caching.</p>
       </div>
     </div>
   );
@@ -265,13 +266,13 @@ function Index() {
         <img src={logo} alt="SANORA logo" className="h-12 w-12 md:h-14 md:w-14" />
         <span className="mt-3 text-sm font-black tracking-[0.35em]">SANORA</span>
         <h1 className="mt-6 text-2xl font-bold leading-[1.15] md:text-5xl">
-          Studio High-Res Sound
+          Personal Audio Player
           <br />
-          Zero Interruptions
+          Built-in Studio Equalizer
           <br />
-          <span className="text-gold">Made for True Audiophiles</span>
+          <span className="text-gold">Tailored for Android</span>
         </h1>
-        <p className="mt-4 max-w-xl text-sm text-subtle md:text-base">The next-generation music streamer built for audiophiles, equipped with studio DSP and universal playlist portability.</p>
+        <p className="mt-4 max-w-xl text-sm text-subtle md:text-base">An independent client-side audio player featuring a 10-band DSP equalizer, offline caching, and public playlist metadata sync.</p>
         <nav className="mt-6 flex flex-wrap justify-center gap-1.5">
           {nav.map(([l, id]) => (
             <a key={id} href={`#${id}`} className="rounded-full border border-foreground/20 bg-foreground/[0.06] px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-foreground/40 hover:bg-foreground hover:text-background">{l}</a>
@@ -282,8 +283,8 @@ function Index() {
           <span className="text-sm font-bold">Download App</span>
           <span className="text-[10px] opacity-60">Version {APP_VERSION}</span>
         </DownloadLink>
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 shrink-0 text-foreground/70" />Official direct release package</p>
-        <p className="mt-1.5 max-w-sm text-[11px] text-muted-foreground">Trusted by audiophiles across India — no ads, no tracking, no hidden charges.</p>
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 shrink-0 text-foreground/70" />Direct release package (APK)</p>
+        <p className="mt-1.5 max-w-sm text-[11px] text-muted-foreground">Lightweight Android client with local storage caching and ad-free listening.</p>
         <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-subtle transition hover:border-foreground/40 hover:bg-card hover:text-foreground">
           Contact Support <ArrowUpRight className="h-3 w-3" />
         </a>
@@ -292,7 +293,8 @@ function Index() {
       <div className="mt-4"><Slider /></div>
 
       <section className="py-10 text-center">
-        <h2 className="px-4 text-lg font-bold md:text-2xl">Import Your Library From Anywhere in Seconds</h2>
+        <h2 className="px-4 text-lg font-bold md:text-2xl">Playlist Metadata Transfer</h2>
+        <p className="mx-auto mt-2 max-w-md px-4 text-xs text-muted-foreground">Parse public playlist links to migrate track titles and artist names into your personal library.</p>
         <div className="relative mt-7 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_15%,#000_85%,transparent)]">
           <div className="marquee flex w-max items-center gap-12">
             {[...brands, ...brands, ...brands, ...brands].map(([name, src], k) => (
@@ -300,7 +302,7 @@ function Index() {
             ))}
           </div>
         </div>
-        <p className="mx-auto mt-6 max-w-md px-4 text-xs text-muted-foreground">One-click metadata migration for song titles, artists, and playlists, matched directly against the SANORA catalogue.</p>
+        <p className="mx-auto mt-6 max-w-md px-4 text-xs text-muted-foreground">Reads public text and metadata from supported platforms. Does not download or transfer copyrighted audio files between services.</p>
       </section>
 
       <Section id="features" title="Studio Specs">
