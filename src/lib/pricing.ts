@@ -2,7 +2,6 @@
 export const PLANS = {
   "pro-1m": { amount: 3900, months: 1, label: "1 Month" },
   "pro-2m": { amount: 6900, months: 2, label: "2 Months" },
-  "pro-3m": { amount: 9900, months: 3, label: "3 Months" },
 } as const;
 export type PlanId = keyof typeof PLANS;
 export const PLAN_IDS = Object.keys(PLANS) as [PlanId, ...PlanId[]];

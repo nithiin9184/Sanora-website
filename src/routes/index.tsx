@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteFooter } from "@/components/site-footer";
 import { DownloadLink } from "@/components/download-link";
 import { useEffect, useState } from "react";
-import { Check, Copy, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight } from "lucide-react";
+import { Check, Copy, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud } from "lucide-react";
 import logo from "@/assets/sanora-logo.webp";
 import s1 from "@/assets/shot1.webp";
 import s2 from "@/assets/shot2.webp";
@@ -190,11 +190,15 @@ const guide = [
 ];
 
 const features = [
-  [Sliders, "10-Band Parametric Equalizer", "Real-time Web Audio DSP from 32Hz to 16kHz."],
-  [Waves, "Deep Bass Boost & Lo-Fi Warmth", "Hardware-calibrated low-shelf punch and vintage tape saturation."],
-  [Mic2, "Synchronized Real-time Lyrics", "Millisecond-accurate live scrolling."],
-  [Moon, "AMOLED Pure Black", "100% battery-saving OLED black mode."],
-  [Bluetooth, "Bluetooth Route & Battery Display", "Real-time earbud battery percentage."],
+  [Sliders, "10-Band Parametric Equalizer", "Real-time Web Audio DSP from 32Hz to 16kHz for audiophile acoustic tuning."],
+  [Waves, "Deep Bass Boost & Lo-Fi Warmth", "Hardware-calibrated low-shelf punch and vintage analog tape saturation."],
+  [Headphones, "320kbps High-Res Audio", "Studio-grade lossless streaming with real-time dynamic bitrate switching."],
+  [Shuffle, "Seamless Crossfades", "Apple Music-style smooth gapless playback and natural track transitions."],
+  [Sparkles, "Ambient Player Glow", "Full-screen player with responsive, synchronized album art lighting."],
+  [Mic2, "Synchronized Real-time Lyrics", "Millisecond-accurate live scrolling with dynamic line tracking."],
+  [Moon, "AMOLED Pure Black", "100% battery-saving OLED black mode engineered for modern displays."],
+  [DownloadCloud, "Smart Offline Cache", "Instant offline downloads with granular storage tracking and complete cache purge."],
+  [Bluetooth, "Bluetooth Route & Battery Display", "Real-time earbud battery percentage and high-resolution codec routing."],
 ] as const;
 
 type Review = { name: string; rating: number; text: string };
@@ -303,18 +307,24 @@ function Faq() {
           <span className="font-mono text-sm font-semibold">Version {APP_VERSION}</span>
           <span className="text-xs text-muted-foreground">Release: October 2026</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Initial public release with Universal Playlist Import, Studio FX Engine, and AMOLED pure black architecture.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 release with 320kbps High-Res audio, Apple Music-style crossfades, ambient player glow, UPI intent checkout, smart cache manager, and Plus & Pro plans.</p>
       </div>
     </div>
   );
 }
 
 const plans = [
-  ["1 Month", "₹39", "per month"],
-  ["2 Months", "₹69", "₹34.5 / month"],
-  ["3 Months", "₹99", "₹33 / month · best value"],
+  ["Plus (1 Month)", "₹39", "30 Days · Up to 5 imports"],
+  ["Pro (2 Months)", "₹69", "60 Days · Unlimited imports · Best value"],
 ] as const;
-const planFeatures = ["320kbps High-Res", "Studio EQ & FX", "Unlimited Playlist Imports", "VIP Badge"];
+const planFeatures = [
+  "320kbps Lossless Sound Quality",
+  "10-Band Studio EQ, Bass Boost & Crossfade",
+  "Universal Playlist Import (Spotify, YT Music & more)",
+  "Full-screen Ambient Glow & Synced Lyrics",
+  "Smart Offline Cache & Background Playback",
+  "VIP Pro Badge & 48-Hour Grace Protection",
+];
 
 function Index() {
   return (

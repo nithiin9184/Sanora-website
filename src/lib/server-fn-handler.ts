@@ -64,7 +64,7 @@ function jsonResponse(request: Request, body: unknown, status = 200): Response {
 
 // Plan definitions matching the mobile app
 export interface ProPlan {
-  id: "pro-1m" | "pro-2m" | "pro-3m";
+  id: "pro-1m" | "pro-2m";
   months: number;
   priceInr: number;
   label: string;
@@ -73,7 +73,6 @@ export interface ProPlan {
 export const PRO_PLANS: Record<string, ProPlan> = {
   "pro-1m": { id: "pro-1m", months: 1, priceInr: 39, label: "1 Month" },
   "pro-2m": { id: "pro-2m", months: 2, priceInr: 69, label: "2 Months" },
-  "pro-3m": { id: "pro-3m", months: 3, priceInr: 99, label: "3 Months" },
 };
 
 export function applyPercent(priceInr: number, percent: number): number {
