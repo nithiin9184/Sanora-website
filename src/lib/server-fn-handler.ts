@@ -6,6 +6,7 @@ import {
   getServerEnv,
   redeemCouponInDb,
 } from "./sanora.server";
+import { fetchExternalPlaylist } from "./playlist-import.server";
 
 const NATIVE_ORIGINS = [
   "https://sanoramusic.in",
@@ -112,6 +113,7 @@ export const SERVER_FN_IDS = {
   verifyRazorpayPayment: "03a47993cfaf4779f6f57da554b09ec9afec88ca5e46f35ac2ef975e070f90b9",
   getProStatus: "3f5e7c81c2b4d8836fddafd8795d7593280e0c88c8e9f0d95e02e9b81bde5cf7",
   setAutoRenew: "66296b68b7353d22fb979efa1b884260b7dbb516f97adc98ba02b6c313543e30",
+  getExternalPlaylist: "69e965bb6010e375be0e632dcb119d91e91ca82f556acb882c4dce72e956940e",
 } as const;
 
 export async function handleServerFnRequest(request: Request): Promise<Response> {
@@ -133,7 +135,30 @@ export async function handleServerFnRequest(request: Request): Promise<Response>
       payload = raw?.data ?? raw;
     }
   } catch {
-    payload = {};
+    payload = undefined;
+  }
+
+  // TanStack Start GET requests pass payload via query parameters or Seroval string
+  if (payload === undefined) {
+    const queryPayload = url.searchParams.get("payload") || url.searchParams.get("data");
+    if (queryPayload) {
+      try {
+        const raw = JSON.parse(queryPayload);
+        if (raw && typeof raw === "object" && "t" in raw) {
+          const { fromJSON } = await import("seroval");
+          const decoded = fromJSON(raw) as any;
+          payload = decoded?.data ?? decoded;
+        } else {
+          payload = raw?.data ?? raw;
+        }
+      } catch {
+        payload = { url: queryPayload };
+      }
+    } else if (url.searchParams.get("url")) {
+      payload = { url: url.searchParams.get("url") };
+    } else {
+      payload = {};
+    }
   }
 
   try {
@@ -156,6 +181,9 @@ export async function handleServerFnRequest(request: Request): Promise<Response>
       case SERVER_FN_IDS.redeemFreeCoupon:
         return await handleRedeemFreeCoupon(request, payload);
 
+      case SERVER_FN_IDS.getExternalPlaylist:
+        return await handleGetExternalPlaylist(request, payload);
+
       default:
         return jsonResponse(request, { error: "Unknown server function", id: fnId }, 404);
     }
@@ -164,6 +192,49 @@ export async function handleServerFnRequest(request: Request): Promise<Response>
     return jsonResponse(
       request,
       { ok: false, reason: "error", message: err?.message || "Server error" },
+      200
+    );
+  }
+}
+
+async function handleGetExternalPlaylist(request: Request, data: any): Promise<Response> {
+  const targetUrl =
+    typeof data === "string"
+      ? data
+      : typeof data?.url === "string"
+      ? data.url
+      : typeof data?.data?.url === "string"
+      ? data.data.url
+      : "";
+
+  if (!targetUrl) {
+    return jsonResponse(
+      request,
+      {
+        platform: "spotify",
+        id: "",
+        name: "",
+        cover: null,
+        tracks: [],
+      },
+      200
+    );
+  }
+
+  try {
+    const playlist = await fetchExternalPlaylist(targetUrl);
+    return jsonResponse(request, playlist);
+  } catch (err: any) {
+    console.warn("External playlist import error:", err);
+    return jsonResponse(
+      request,
+      {
+        platform: "spotify",
+        id: "",
+        name: "",
+        cover: null,
+        tracks: [],
+      },
       200
     );
   }

@@ -60,3 +60,41 @@ describe("Server function dispatcher", () => {
     expect(json.result.reason).toBe("invalid");
   });
 });
+
+describe("External playlist import handler", () => {
+  it("dispatches getExternalPlaylist server function and wraps in result", async () => {
+    const req = new Request(
+      `https://sanoramusic.in/_serverFn/${SERVER_FN_IDS.getExternalPlaylist}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: { url: "https://open.spotify.com/playlist/5AWD9ZKYUW9BPRcbGkONcf" },
+        }),
+      }
+    );
+    const res = await handleServerFnRequest(req);
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json).toHaveProperty("result");
+    expect(json.result.platform).toBe("spotify");
+    expect(json.result.name).toBe("My playlist #1");
+    expect(Array.isArray(json.result.tracks)).toBe(true);
+    expect(json.result.tracks.length).toBeGreaterThan(0);
+  });
+
+  it("handles empty or invalid playlist url gracefully", async () => {
+    const req = new Request(
+      `https://sanoramusic.in/_serverFn/${SERVER_FN_IDS.getExternalPlaylist}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: { url: "invalid-url" } }),
+      }
+    );
+    const res = await handleServerFnRequest(req);
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.result.tracks).toEqual([]);
+  });
+});
