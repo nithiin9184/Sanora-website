@@ -98,7 +98,7 @@ Strict Visual & Design Rules:
 
   - Step 4: "Log In & Enjoy" -> Sign in seamlessly with Google and access 80M+ songs.
 
-- Concise, reassuring security disclaimer: "100% Virus-Free · Safe & Verified Package · No Adware".
+- Direct APK release note: Verified distribution package.
 
 6. Features & Studio Specs Breakdown:
 

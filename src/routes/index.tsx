@@ -183,7 +183,7 @@ function Coupons() {
 
 const guide = [
   ["Download the APK", "Tap Download App — Chrome will ask to confirm. Tap 'Download'.", g1],
-  ["Keep the File", "Android shows a standard prompt for browser downloads. Tap 'Keep' or 'Download anyway' — SANORA APK is clean and malware-free.", g2],
+  ["Confirm Direct Download", "Standard Android package installation for direct beta releases. Confirm download to proceed.", g2],
   ["Enable Install Permission", "When prompted by Android, tap Settings and allow installation for Chrome.", g3],
   ["Install & Enjoy", "Tap 'Install' on the SANORA Music package installer, launch the app and sign in.", g4],
 ];
@@ -311,7 +311,7 @@ function Faq() {
           <span className="font-mono text-sm font-semibold">Version {APP_VERSION}</span>
           <span className="text-xs text-muted-foreground">Release: October 2026</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 release with 320kbps High-Res audio, Apple Music-style crossfades, ambient player glow, UPI intent checkout, smart cache manager, and Plus & Pro plans.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 release with 320kbps High-Res audio, Apple Music-style crossfades, ambient player glow, Fast Razorpay UPI Checkout, smart cache manager, and Plus & Pro plans.</p>
       </div>
     </div>
   );
@@ -354,9 +354,7 @@ function Index() {
           <span className="text-sm font-bold">Download App</span>
           <span className="text-[10px] opacity-60">Version {APP_VERSION}</span>
         </DownloadLink>
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-xs font-medium text-green-500">
-          <ShieldCheck className="h-3.5 w-3.5 shrink-0" />100% Virus-Free · Safe & Verified Package · No Adware
-        </p>
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 shrink-0 text-foreground/70" />Official direct release package</p>
         <p className="mt-1.5 max-w-sm text-[11px] text-muted-foreground">Trusted by audiophiles across India — no ads, no tracking, no hidden charges.</p>
         <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-subtle transition hover:border-foreground/40 hover:bg-card hover:text-foreground">
           Contact Support <ArrowUpRight className="h-3 w-3" />
@@ -374,7 +372,7 @@ function Index() {
             ))}
           </div>
         </div>
-        <p className="mx-auto mt-6 max-w-md px-4 text-xs text-muted-foreground">One-click metadata migration — titles, artists, albums and order — with zero audio transcoding, so your sound stays untouched.</p>
+        <p className="mx-auto mt-6 max-w-md px-4 text-xs text-muted-foreground">One-click metadata migration for song titles, artists, and playlists, matched directly against the SANORA catalogue.</p>
       </section>
 
       <Section id="coupon-codes" title="Exclusive Coupon Codes"><Coupons /></Section>
@@ -390,7 +388,7 @@ function Index() {
             </div>
           ))}
         </div>
-        <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs font-medium text-green-500"><ShieldCheck className="h-3.5 w-3.5 shrink-0" />100% Virus-Free · Safe & Verified Package · No Adware</p>
+        <p className="mt-6 text-center text-xs text-muted-foreground">Official distribution built directly for Android devices.</p>
       </Section>
 
       <Section id="features" title="Studio Specs">

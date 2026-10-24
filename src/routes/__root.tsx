@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "SANORA Music" },
       { name: "google-site-verification", content: "_LkykYewJCpiPaoSW6dK1mvE2NXdOO14YylgLRdnr7s" },
-      { name: "description", content: "SANORA Music — lossless audiophile streamer." },
+      { name: "description", content: "SANORA Music — high-fidelity audiophile streamer." },
       { name: "author", content: "Lovable" },
       
       { property: "og:type", content: "website" },
