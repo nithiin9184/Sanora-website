@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 const MANIFEST = {
   latestVersion: "6.1.1",
   minSupportedVersion: "1.0.0",
-  apkUrl: "https://kiisrtoqmrrwqljaafjq.supabase.co/storage/v1/object/public/release/app-debug.apk",
+  apkUrl: "",
   releaseDate: "2026-10-24",
   highlights: [
     "UPI Intent support for Google Pay, PhonePe and Paytm",
