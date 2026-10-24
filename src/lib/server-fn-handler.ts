@@ -27,9 +27,13 @@ export function isServerFnRequest(request: Request): boolean {
 
 function corsHeaders(request: Request): Record<string, string> {
   const origin = request.headers.get("Origin") ?? "";
-  const allowOrigin = NATIVE_ORIGINS.includes(origin) || origin.endsWith("sanoramusic.in")
-    ? origin
-    : "*";
+  const isAllowed =
+    NATIVE_ORIGINS.includes(origin) ||
+    origin === "https://sanoramusic.in" ||
+    origin === "https://www.sanoramusic.in" ||
+    origin.endsWith(".sanoramusic.in");
+
+  const allowOrigin = isAllowed ? origin : (origin || "https://sanoramusic.in");
 
   return {
     "Access-Control-Allow-Origin": allowOrigin,
@@ -43,7 +47,13 @@ function corsHeaders(request: Request): Record<string, string> {
 }
 
 function jsonResponse(request: Request, body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
+  // TanStack Start client RPC protocol expects server function responses to be wrapped in `{ result: ... }`
+  const payload =
+    status >= 400 || (body && typeof body === "object" && ("result" in (body as any) || "error" in (body as any)))
+      ? body
+      : { result: body };
+
+  return new Response(JSON.stringify(payload), {
     status,
     headers: {
       "Content-Type": "application/json",

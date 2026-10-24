@@ -42,7 +42,7 @@ describe("Server function dispatcher", () => {
     expect(res.status).toBe(404);
   });
 
-  it("handles missing coupon code gracefully", async () => {
+  it("wraps responses in TanStack Start result property", async () => {
     const req = new Request(
       `https://sanoramusic.in/_serverFn/${SERVER_FN_IDS.validateCoupon}`,
       {
@@ -54,7 +54,9 @@ describe("Server function dispatcher", () => {
     const res = await handleServerFnRequest(req);
     expect(res.status).toBe(200);
     const json = await res.json();
-    expect(json.ok).toBe(false);
-    expect(json.reason).toBe("invalid");
+    // TanStack Start client RPC extracts `json.result`
+    expect(json).toHaveProperty("result");
+    expect(json.result.ok).toBe(false);
+    expect(json.result.reason).toBe("invalid");
   });
 });
