@@ -1,8 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import { getLaunchCoupon } from "@/lib/coupons.functions";
-import { LAUNCH_COUPON, LAUNCH_COUPON_SLOTS } from "@/lib/pricing";
 import { createFileRoute } from "@tanstack/react-router";
-import { couponTone } from "@/lib/coupon";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { reviewsQueryOptions, reviewPageCount } from "@/lib/reviews";
 import { Button } from "@/components/ui/button";
@@ -10,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteFooter } from "@/components/site-footer";
 import { DownloadLink } from "@/components/download-link";
 import { useEffect, useState } from "react";
-import { Check, Copy, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud } from "lucide-react";
+import { Check, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud } from "lucide-react";
 import logo from "@/assets/sanora-logo.webp";
 import s1 from "@/assets/shot1.webp";
 import s2 from "@/assets/shot2.webp";
@@ -49,8 +45,8 @@ export const Route = createFileRoute("/")({
 const WHATSAPP = "https://wa.me/917672052771?text=Hi%20SANORA%20Support%2C%20I%20need%20help%20with%20the%20Android%20app.";
 const shots = [s1, s2, s3, s4, s5, s6];
 const nav = [
-  ["About", "about"], ["Features", "features"], ["Coupon Codes", "coupon-codes"],
-  ["Price", "price"], ["Community Reviews", "community-reviews"], ["Guide", "guide"],
+  ["About", "about"], ["Features", "features"],
+  ["Community Reviews", "community-reviews"], ["Guide", "guide"], ["FAQ", "faq"],
 ];
 
 function Android({ className = "h-4 w-4" }) {
@@ -124,68 +120,13 @@ const brands = [
   ["Amazon Music", logoAmazonMusic],
 ] as const;
 
-const COUPON = LAUNCH_COUPON;
 const APP_VERSION = "6.1.1";
 
-function Coupons() {
-  const { data: live } = useQuery({ queryKey: ["launch-coupon"], queryFn: () => getLaunchCoupon(), refetchInterval: 30_000 });
-  const TOTAL = live?.total ?? LAUNCH_COUPON_SLOTS;
-  const CLAIMED = Math.min(live?.claimed ?? 0, TOTAL);
-  const [copied, setCopied] = useState(false);
-  const [r, setR] = useState([["🔥", "Working", 0], ["❤️", "Loved it", 0], ["⚡", "Instant Unlock", 0]] as [string, string, number][]);
-  const [on, setOn] = useState<boolean[]>([false, false, false]);
-  const copy = () => {
-    navigator.clipboard?.writeText(COUPON);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-  const toggle = (k: number) => {
-    setR((p) => p.map((x, j) => (j === k ? [x[0], x[1], x[2] + (on[k] ? -1 : 1)] : x)));
-    setOn((p) => p.map((x, j) => (j === k ? !x : x)));
-  };
-  const pct = (CLAIMED / TOTAL) * 100;
-  const tone = couponTone(CLAIMED, TOTAL);
-  const toneText = { good: "text-status-good", warn: "text-status-warn", bad: "text-status-bad" }[tone];
-  const toneBg = { good: "bg-status-good", warn: "bg-status-warn", bad: "bg-status-bad" }[tone];
-  return (
-    <div className="card-perimeter mx-auto max-w-xl rounded-2xl p-4 md:p-6">
-      <p className="text-center text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Launch Offer</p>
-      <h3 className="mt-1 text-center text-base font-bold md:text-lg">40% Off — 1 Month Plan</h3>
-      <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row">
-        <div className="w-full flex-1 rounded-xl border border-border bg-background/60 px-4 py-2.5 text-center font-mono text-sm tracking-widest">{COUPON}</div>
-        <button onClick={copy} className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-85 sm:w-auto">
-          {copied ? <><Check className="h-3.5 w-3.5" /> Copied!</> : <><Copy className="h-3.5 w-3.5" /> Copy Code</>}
-        </button>
-      </div>
-      <div className="mt-4">
-        <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1.5 font-medium text-status-good"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-status-good" />Launch Offer Active</span>
-          <span className="text-muted-foreground">Applies to 1-Month Plan</span>
-        </div>
-      </div>
-      <ol className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-4">
-        {["Download APK", "Open SANORA", "Open Pro Menu", "Apply Code on 1 Month Plan"].map((t, k) => (
-          <li key={t} className="rounded-xl border border-border p-2 text-center text-xs">
-            <span className="block text-[10px] text-muted-foreground">Step {k + 1}</span>{t}
-          </li>
-        ))}
-      </ol>
-      <div className="mt-5 flex flex-wrap justify-center gap-1.5">
-        {r.map(([e, l, n], k) => (
-          <button key={l} onClick={() => toggle(k)} className={`rounded-full border px-3 py-1.5 text-xs transition ${on[k] ? "border-foreground/40 bg-secondary" : "border-border hover:bg-card"}`}>
-            {e} {l} ({n})
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 const guide = [
-  ["Download the APK", "Tap Download App — Chrome will ask to confirm. Tap 'Download'.", g1],
-  ["Confirm Direct Download", "Standard Android package installation for direct beta releases. Confirm download to proceed.", g2],
-  ["Enable Install Permission", "When prompted by Android, tap Settings and allow installation for Chrome.", g3],
-  ["Install & Enjoy", "Tap 'Install' on the SANORA Music package installer, launch the app and sign in.", g4],
+  ["Download the APK", "Tap Download App to get the direct package file.", g1],
+  ["Confirm Download", "Tap Download to save the package to your device.", g2],
+  ["Allow Installation", "If prompted by Android, allow package installation in Settings.", g3],
+  ["Install & Launch", "Tap Install to complete setup and launch SANORA Music.", g4],
 ];
 
 const features = [
@@ -287,7 +228,7 @@ function Reviews() {
 }
 
 const faqs = [
-  ["Is SANORA free to use?", "Yes. The Free Listener plan gives full catalogue access and playlists. Pro starts at ₹39/month — or 40% off the 1 Month plan with launch code SANORA9184."],
+  ["Is SANORA free to use?", "Yes. SANORA Music gives free access to stream music and create playlists."],
   ["How does the universal playlist import work?", "Paste a playlist link or connect your account. SANORA migrates titles, artists and metadata in one click and matches them to its catalogue — no audio transcoding involved."],
   ["Will my downloaded songs and playlists stay safe across updates?", "Yes. Installing a newer APK over the existing app keeps all your downloads, playlists and settings intact."],
 ];
@@ -311,24 +252,11 @@ function Faq() {
           <span className="font-mono text-sm font-semibold">Version {APP_VERSION}</span>
           <span className="text-xs text-muted-foreground">Release: October 2026</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 release with 320kbps High-Res audio, Apple Music-style crossfades, ambient player glow, Fast Razorpay UPI Checkout, smart cache manager, and Plus & Pro plans.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 release with 320kbps High-Res audio, Apple Music-style crossfades, ambient player glow, smart cache manager, and studio equalizer.</p>
       </div>
     </div>
   );
 }
-
-const plans = [
-  ["Plus (1 Month)", "₹39", "30 Days · Up to 5 imports"],
-  ["Pro (2 Months)", "₹69", "60 Days · Unlimited imports · Best value"],
-] as const;
-const planFeatures = [
-  "320kbps High-Bitrate Studio Audio",
-  "10-Band Studio EQ, Bass Boost & Crossfade",
-  "Universal Playlist Import (Spotify, YT Music & more)",
-  "Full-screen Ambient Glow & Synced Lyrics",
-  "Smart Offline Cache & Background Playback",
-  "VIP Pro Badge & 48-Hour Grace Protection",
-];
 
 function Index() {
   return (
@@ -349,7 +277,7 @@ function Index() {
             <a key={id} href={`#${id}`} className="rounded-full border border-foreground/20 bg-foreground/[0.06] px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-foreground/40 hover:bg-foreground hover:text-background">{l}</a>
           ))}
         </nav>
-        <DownloadLink showCount className="btn-perimeter mt-2 inline-flex items-center gap-2 rounded-full px-6 py-3 text-primary-foreground transition hover:scale-[1.02] hover:opacity-90">
+        <DownloadLink className="btn-perimeter mt-2 inline-flex items-center gap-2 rounded-full px-6 py-3 text-primary-foreground transition hover:scale-[1.02] hover:opacity-90">
           <Android className="h-3.5 w-3.5" />
           <span className="text-sm font-bold">Download App</span>
           <span className="text-[10px] opacity-60">Version {APP_VERSION}</span>
@@ -375,22 +303,6 @@ function Index() {
         <p className="mx-auto mt-6 max-w-md px-4 text-xs text-muted-foreground">One-click metadata migration for song titles, artists, and playlists, matched directly against the SANORA catalogue.</p>
       </section>
 
-      <Section id="coupon-codes" title="Exclusive Coupon Codes"><Coupons /></Section>
-
-      <Section id="guide" title="Install in 4 Steps" sub="For Android users installing outside the Play Store.">
-        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-          {guide.map(([t, d, shot], k) => (
-            <div key={t} className="glass rounded-2xl p-4">
-              <img src={shot} alt={t} className="mx-auto h-72 w-auto object-contain" loading="lazy" />
-              <p className="mt-3 text-[10px] text-muted-foreground">Step {k + 1}</p>
-              <h3 className="text-sm font-semibold">{t}</h3>
-              <p className="mt-1 text-xs text-muted-foreground">{d}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-6 text-center text-xs text-muted-foreground">Official distribution built directly for Android devices.</p>
-      </Section>
-
       <Section id="features" title="Studio Specs">
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map(([I, t, d]) => (
@@ -403,28 +315,21 @@ function Index() {
         </div>
       </Section>
 
-      <Section id="price" title="Simple, Transparent Pricing">
-        <div className="glass mx-auto max-w-md rounded-2xl p-5">
-          <div className="divide-y divide-border">
-            {plans.map(([n, p, sub]) => (
-              <div key={n} className="flex items-center justify-between py-3">
-                <div>
-                  <h3 className="text-sm font-semibold">{n}</h3>
-                  <p className="text-[11px] text-muted-foreground">{sub}</p>
-                </div>
-                <p className="text-2xl font-bold">{p}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-xs font-semibold text-subtle">All plans include</p>
-          <ul className="mt-2 space-y-2 text-xs">
-            {planFeatures.map((x) => <li key={x} className="flex gap-1.5"><Check className="h-3.5 w-3.5 shrink-0" />{x}</li>)}
-          </ul>
-          <a href="#coupon-codes" className="mt-5 block rounded-full bg-primary py-2 text-center text-xs font-semibold text-primary-foreground">Get 40% Off</a>
-        </div>
-      </Section>
-
       <Section id="community-reviews" title="Community Reviews"><Reviews /></Section>
+
+      <Section id="guide" title="Install in 4 Steps" sub="Quick Android installation guide.">
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          {guide.map(([t, d, shot], k) => (
+            <div key={t} className="glass rounded-2xl p-4">
+              <img src={shot} alt={t} className="mx-auto h-72 w-auto object-contain" loading="lazy" />
+              <p className="mt-3 text-[10px] text-muted-foreground">Step {k + 1}</p>
+              <h3 className="text-sm font-semibold">{t}</h3>
+              <p className="mt-1 text-xs text-muted-foreground">{d}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-center text-xs text-muted-foreground">Official distribution built directly for Android devices.</p>
+      </Section>
 
       <Section id="faq" title="FAQ & Release Notes"><Faq /></Section>
 
