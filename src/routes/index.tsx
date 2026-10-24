@@ -4,9 +4,10 @@ import { reviewsQueryOptions, reviewPageCount } from "@/lib/reviews";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteFooter } from "@/components/site-footer";
+import { InstagramLogo } from "@/components/instagram-logo";
 import { DownloadLink } from "@/components/download-link";
 import { useEffect, useState } from "react";
-import { Check, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud, Instagram } from "lucide-react";
+import { Check, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud } from "lucide-react";
 import logo from "@/assets/sanora-logo.webp";
 import s1 from "@/assets/shot1.webp";
 import s2 from "@/assets/shot2.webp";
@@ -267,7 +268,7 @@ function Index() {
       <aside aria-label="Official announcements" className="border-b border-border/80 bg-foreground/[0.03] px-4 py-2.5 text-center text-xs">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
           <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
-            <Instagram className="h-3.5 w-3.5 text-gold shrink-0" />
+            <InstagramLogo className="h-3.5 w-3.5 shrink-0 rounded-[3px]" />
             <span>Follow us on Instagram</span>
           </span>
           <span className="hidden text-muted-foreground sm:inline">•</span>
@@ -313,7 +314,7 @@ function Index() {
             Contact Support <ArrowUpRight className="h-3 w-3" />
           </a>
           <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-foreground transition hover:border-gold hover:bg-card hover:text-gold">
-            <Instagram className="h-3.5 w-3.5 text-gold" />
+            <InstagramLogo className="h-3.5 w-3.5 shrink-0 rounded-[3px]" />
             Follow on Instagram <ArrowUpRight className="h-3 w-3" />
           </a>
         </div>
@@ -350,8 +351,8 @@ function Index() {
 
       <Section id="community" title="Official Community" sub="Connect with fellow listeners and stay up to date.">
         <div className="glass mx-auto max-w-2xl rounded-2xl border border-border-strong p-6 text-center sm:p-8">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-border-strong bg-foreground/[0.04] text-gold">
-            <Instagram className="h-6 w-6" />
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-border-strong bg-foreground/[0.04] p-2.5 shadow-sm">
+            <InstagramLogo className="h-full w-full rounded-lg" />
           </div>
           <h3 className="mt-4 text-base font-bold sm:text-lg">Follow @sanoramusicofficial</h3>
           <p className="mx-auto mt-2 max-w-md text-xs text-muted-foreground sm:text-sm">
@@ -364,7 +365,7 @@ function Index() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-foreground/[0.04] px-5 py-2.5 text-xs font-bold text-foreground transition hover:border-gold hover:bg-foreground/[0.08] hover:text-gold"
             >
-              <Instagram className="h-4 w-4 text-gold" />
+              <InstagramLogo className="h-4 w-4 shrink-0 rounded-[3px]" />
               Follow us on Instagram
               <ArrowUpRight className="h-3.5 w-3.5 opacity-80" />
             </a>

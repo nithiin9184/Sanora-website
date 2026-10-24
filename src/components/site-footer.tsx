@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/sanora-logo.webp";
 import { DownloadLink } from "@/components/download-link";
-import { Instagram, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { InstagramLogo } from "@/components/instagram-logo";
 
 const INSTAGRAM_URL = "https://www.instagram.com/sanoramusicofficial?exln=MWZ2ZjE4Y3djZXh1eg==";
 
@@ -21,9 +22,9 @@ export function SiteFooter() {
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-gold hover:text-gold"
+              className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-foreground/40 hover:text-foreground"
             >
-              <Instagram className="h-3.5 w-3.5 text-gold" />
+              <InstagramLogo className="h-3.5 w-3.5 shrink-0 rounded-[3px]" />
               <span>@sanoramusicofficial</span>
               <ArrowUpRight className="h-3 w-3 opacity-60" />
             </a>
@@ -37,9 +38,9 @@ export function SiteFooter() {
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-foreground hover:underline"
+            className="inline-flex items-center gap-2 underline-offset-4 hover:text-foreground hover:underline"
           >
-            <Instagram className="h-3.5 w-3.5 text-gold" />
+            <InstagramLogo className="h-3.5 w-3.5 shrink-0 rounded-[3px]" />
             <span>Instagram (Coupons &amp; Updates)</span>
           </a>
           <a href="mailto:support@sanoramusic.in" className="underline-offset-4 hover:text-foreground hover:underline">Contact Support</a>
