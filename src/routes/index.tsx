@@ -33,9 +33,9 @@ export const Route = createFileRoute("/")({
   notFoundComponent: () => <p className="p-6 text-center">SANORA Music page not found.</p>,
   head: () => ({
     meta: [
-      { title: "SANORA Music — Pure Lossless Sound. Download APK" },
+      { title: "SANORA Music — Studio Audio & Universal Playlists. Download APK" },
       { name: "description", content: "Next-gen audiophile music streamer with studio DSP and universal playlist import. Download the SANORA APK." },
-      { property: "og:title", content: "SANORA Music — Pure Lossless Sound" },
+      { property: "og:title", content: "SANORA Music — High-Res Studio Audio" },
       { property: "og:description", content: "Studio DSP, AMOLED black, and one-click playlist import from Spotify, Apple Music & more." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
@@ -158,11 +158,10 @@ function Coupons() {
         </button>
       </div>
       <div className="mt-4">
-        <div className="flex justify-between text-xs">
-          <span className={`flex items-center gap-1.5 font-medium ${toneText}`}><span className={`h-1.5 w-1.5 animate-pulse rounded-full ${toneBg}`} />Active</span>
-          <span className={`font-medium ${toneText}`}>{CLAIMED} / {TOTAL} Claimed · {TOTAL - CLAIMED} left</span>
+        <div className="flex items-center justify-between text-xs">
+          <span className="flex items-center gap-1.5 font-medium text-status-good"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-status-good" />Launch Offer Active</span>
+          <span className="text-muted-foreground">Applies to 1-Month Plan</span>
         </div>
-        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-secondary"><div className={`h-full rounded-full transition-all ${toneBg}`} style={{ width: `${pct}%` }} /></div>
       </div>
       <ol className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-4">
         {["Download APK", "Open SANORA", "Open Pro Menu", "Apply Code on 1 Month Plan"].map((t, k) => (
@@ -184,15 +183,15 @@ function Coupons() {
 
 const guide = [
   ["Download the APK", "Tap Download App — Chrome will ask to confirm. Tap 'Download'.", g1],
-  ["Keep the File", "Chrome may warn 'This type of file can harm your device'. Tap 'Keep' — our APK is 100% safe & verified.", g2],
-  ["Allow Unknown Sources", "When prompted, open Settings and enable 'Allow from this source' for Chrome.", g3],
+  ["Keep the File", "Android shows a standard prompt for browser downloads. Tap 'Keep' or 'Download anyway' — SANORA APK is clean and malware-free.", g2],
+  ["Enable Install Permission", "When prompted by Android, tap Settings and allow installation for Chrome.", g3],
   ["Install & Enjoy", "Tap 'Install' on the SANORA Music package installer, launch the app and sign in.", g4],
 ];
 
 const features = [
   [Sliders, "10-Band Parametric Equalizer", "Real-time Web Audio DSP from 32Hz to 16kHz for audiophile acoustic tuning."],
   [Waves, "Deep Bass Boost & Lo-Fi Warmth", "Hardware-calibrated low-shelf punch and vintage analog tape saturation."],
-  [Headphones, "320kbps High-Res Audio", "Studio-grade lossless streaming with real-time dynamic bitrate switching."],
+  [Headphones, "320kbps High-Res Audio", "Studio-grade 320kbps streaming with real-time dynamic bitrate switching."],
   [Shuffle, "Seamless Crossfades", "Apple Music-style smooth gapless playback and natural track transitions."],
   [Sparkles, "Ambient Player Glow", "Full-screen player with responsive, synchronized album art lighting."],
   [Mic2, "Synchronized Real-time Lyrics", "Millisecond-accurate live scrolling with dynamic line tracking."],
@@ -246,7 +245,12 @@ function Reviews() {
           </div>
         ))}
       </div>
-      {total === 0 && <p className="text-center text-sm text-muted-foreground">No reviews yet.</p>}
+      {total === 0 && (
+        <div className="rounded-xl border border-border/60 bg-card/40 p-6 text-center">
+          <p className="text-sm font-medium">Early Beta Community</p>
+          <p className="mt-1 text-xs text-muted-foreground">SANORA v6.1.1 is in open beta. Be the first from the listener community to share your feedback below.</p>
+        </div>
+      )}
       {pages > 1 && (
         <nav aria-label="Review pages" className="mt-6 flex flex-wrap justify-center gap-2">
           {Array.from({ length: pages }, (_, index) => index + 1).map((page) => (
@@ -318,7 +322,7 @@ const plans = [
   ["Pro (2 Months)", "₹69", "60 Days · Unlimited imports · Best value"],
 ] as const;
 const planFeatures = [
-  "320kbps Lossless Sound Quality",
+  "320kbps High-Bitrate Studio Audio",
   "10-Band Studio EQ, Bass Boost & Crossfade",
   "Universal Playlist Import (Spotify, YT Music & more)",
   "Full-screen Ambient Glow & Synced Lyrics",
@@ -333,7 +337,7 @@ function Index() {
         <img src={logo} alt="SANORA logo" className="h-12 w-12 md:h-14 md:w-14" />
         <span className="mt-3 text-sm font-black tracking-[0.35em]">SANORA</span>
         <h1 className="mt-6 text-2xl font-bold leading-[1.15] md:text-5xl">
-          Pure Lossless Sound
+          Studio High-Res Sound
           <br />
           Zero Interruptions
           <br />
