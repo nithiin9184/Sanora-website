@@ -7,4 +7,4 @@ export function downloadTotal(newDownloads: number) {
 export function formatDownloads(total: number) {
   return total === INITIAL_DOWNLOADS ? "10.2k" : total.toLocaleString("en-US");
 }
-export const APK_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co/storage/v1/object/public/release/app-debug.apk";
+export const APK_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co/storage/v1/object/public/release/SANORA%20MUSIC.apk";

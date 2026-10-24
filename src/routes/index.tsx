@@ -125,7 +125,7 @@ const brands = [
 ] as const;
 
 const COUPON = LAUNCH_COUPON;
-const APP_VERSION = "1.1.7";
+const APP_VERSION = "6.1.1";
 
 function Coupons() {
   const { data: live } = useQuery({ queryKey: ["launch-coupon"], queryFn: () => getLaunchCoupon(), refetchInterval: 30_000 });
