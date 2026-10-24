@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteFooter } from "@/components/site-footer";
 import { DownloadLink } from "@/components/download-link";
 import { useEffect, useState } from "react";
-import { Check, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud } from "lucide-react";
+import { Check, ShieldCheck, Star, ChevronDown, Sliders, Waves, Mic2, Moon, Bluetooth, X, ArrowUpRight, Headphones, Shuffle, Sparkles, DownloadCloud, Instagram } from "lucide-react";
 import logo from "@/assets/sanora-logo.webp";
 import s1 from "@/assets/shot1.webp";
 import s2 from "@/assets/shot2.webp";
@@ -43,10 +43,11 @@ export const Route = createFileRoute("/")({
 });
 
 const WHATSAPP = "https://wa.me/917672052771?text=Hi%20SANORA%20Support%2C%20I%20need%20help%20with%20the%20Android%20app.";
+const INSTAGRAM = "https://www.instagram.com/sanoramusicofficial?exln=MWZ2ZjE4Y3djZXh1eg==";
 const shots = [s1, s2, s3, s4, s5, s6];
 const nav = [
   ["About", "about"], ["Features", "features"],
-  ["Community Reviews", "community-reviews"], ["Guide", "guide"], ["FAQ", "faq"],
+  ["Community Reviews", "community-reviews"], ["Community", "community"], ["Guide", "guide"], ["FAQ", "faq"],
 ];
 
 function Android({ className = "h-4 w-4" }) {
@@ -231,6 +232,7 @@ const faqs = [
   ["What is SANORA Music?", "SANORA Music is an independent Android audio player and media organizer that plays public audio streams and lets you organize personal playlists with a custom equalizer."],
   ["How does playlist metadata import work?", "Paste a public playlist URL from supported streaming platforms. SANORA reads the song titles and artist names, creating a matching playlist in your local library. It does not transfer or convert audio files from third-party services."],
   ["Why is SANORA distributed via direct APK?", "SANORA is currently provided as a direct Android APK package for beta testing and independent distribution directly to listeners without store intermediaries."],
+  ["Where can I find latest updates and coupon codes?", "Follow our official Instagram profile @sanoramusicofficial for new version release announcements, feature drops, and exclusive promotional coupon codes."],
   ["Are downloaded songs and settings preserved during updates?", "Yes. Installing an updated APK package over an existing installation retains your local cache, playlists, and equalizer presets."],
 ];
 
@@ -262,6 +264,27 @@ function Faq() {
 function Index() {
   return (
     <main className="overflow-x-hidden">
+      <aside aria-label="Official announcements" className="border-b border-border/80 bg-foreground/[0.03] px-4 py-2.5 text-center text-xs">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
+          <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
+            <Instagram className="h-3.5 w-3.5 text-gold shrink-0" />
+            <span>Follow us on Instagram</span>
+          </span>
+          <span className="hidden text-muted-foreground sm:inline">•</span>
+          <span className="text-[11px] text-muted-foreground sm:text-xs">
+            Exclusive coupon codes, feature drops &amp; latest updates
+          </span>
+          <a
+            href={INSTAGRAM}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full border border-border-strong bg-card/60 px-2.5 py-0.5 text-[11px] font-semibold text-foreground transition hover:border-gold hover:text-gold"
+          >
+            @sanoramusicofficial <ArrowUpRight className="h-2.5 w-2.5" />
+          </a>
+        </div>
+      </aside>
+
       <header id="about" className="mx-auto flex max-w-3xl flex-col items-center px-4 pt-10 text-center md:pt-14">
         <img src={logo} alt="SANORA logo" className="h-12 w-12 md:h-14 md:w-14" />
         <span className="mt-3 text-sm font-black tracking-[0.35em]">SANORA</span>
@@ -285,9 +308,15 @@ function Index() {
         </DownloadLink>
         <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 shrink-0 text-foreground/70" />Direct release package (APK)</p>
         <p className="mt-1.5 max-w-sm text-[11px] text-muted-foreground">Lightweight Android client with local storage caching and ad-free listening.</p>
-        <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-subtle transition hover:border-foreground/40 hover:bg-card hover:text-foreground">
-          Contact Support <ArrowUpRight className="h-3 w-3" />
-        </a>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-subtle transition hover:border-foreground/40 hover:bg-card hover:text-foreground">
+            Contact Support <ArrowUpRight className="h-3 w-3" />
+          </a>
+          <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-foreground transition hover:border-gold hover:bg-card hover:text-gold">
+            <Instagram className="h-3.5 w-3.5 text-gold" />
+            Follow on Instagram <ArrowUpRight className="h-3 w-3" />
+          </a>
+        </div>
       </header>
 
       <div className="mt-4"><Slider /></div>
@@ -318,6 +347,30 @@ function Index() {
       </Section>
 
       <Section id="community-reviews" title="Community Reviews"><Reviews /></Section>
+
+      <Section id="community" title="Official Community" sub="Connect with fellow listeners and stay up to date.">
+        <div className="glass mx-auto max-w-2xl rounded-2xl border border-border-strong p-6 text-center sm:p-8">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-border-strong bg-foreground/[0.04] text-gold">
+            <Instagram className="h-6 w-6" />
+          </div>
+          <h3 className="mt-4 text-base font-bold sm:text-lg">Follow @sanoramusicofficial</h3>
+          <p className="mx-auto mt-2 max-w-md text-xs text-muted-foreground sm:text-sm">
+            Follow our official Instagram profile for new release changelogs, upcoming feature drops, and exclusive promotional coupon codes.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href={INSTAGRAM}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-foreground/[0.04] px-5 py-2.5 text-xs font-bold text-foreground transition hover:border-gold hover:bg-foreground/[0.08] hover:text-gold"
+            >
+              <Instagram className="h-4 w-4 text-gold" />
+              Follow us on Instagram
+              <ArrowUpRight className="h-3.5 w-3.5 opacity-80" />
+            </a>
+          </div>
+        </div>
+      </Section>
 
       <Section id="guide" title="Install in 4 Steps" sub="Quick Android installation guide.">
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
