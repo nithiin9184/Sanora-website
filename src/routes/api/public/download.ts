@@ -30,17 +30,18 @@ export const Route = createFileRoute("/api/public/download")({
         const { corsHeaders } = await import("@/lib/sanora.server");
         try {
           const upstream = await fetch(APK_URL);
-          if (upstream.ok && upstream.body) {
+          if (upstream.ok) {
+            const buffer = await upstream.arrayBuffer();
             const headers = new Headers(corsHeaders(request));
             headers.set("Content-Type", "application/vnd.android.package-archive");
             headers.set("Content-Disposition", 'attachment; filename="sanora-music.apk"');
-            const length = upstream.headers.get("content-length");
-            if (length) headers.set("Content-Length", length);
+            const length = upstream.headers.get("content-length") || buffer.byteLength.toString();
+            headers.set("Content-Length", length);
             headers.set("Cache-Control", "public, max-age=3600, s-maxage=86400");
-            return new Response(upstream.body, { status: 200, headers });
+            return new Response(buffer, { status: 200, headers });
           }
-        } catch {
-          // Fallback to direct redirect if streaming fails
+        } catch (err) {
+          console.error("APK buffer download error:", err);
         }
         return Response.redirect(APK_URL, 302);
       },
