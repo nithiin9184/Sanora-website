@@ -14,6 +14,7 @@ import { Route as DmcaRouteImport } from './routes/dmca'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as LegalPageRouteImport } from './routes/legal.$page'
+import { Route as ApiPublicDownloadRouteImport } from './routes/api/public/download'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicUpdateRouteImport } from './routes/api/public/update'
 import { Route as ApiPublicCouponsCodeRouteImport } from './routes/api/public/coupons.$code'
@@ -44,6 +45,11 @@ const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
 const LegalPageRoute = LegalPageRouteImport.update({
   id: '/legal/$page',
   path: '/legal/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDownloadRoute = ApiPublicDownloadRouteImport.update({
+  id: '/api/public/download',
+  path: '/api/public/download',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/legal/$page': typeof LegalPageRoute
+  '/api/public/download': typeof ApiPublicDownloadRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/update': typeof ApiPublicUpdateRoute
   '/api/public/coupons/$code': typeof ApiPublicCouponsCodeRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/legal/$page': typeof LegalPageRoute
+  '/api/public/download': typeof ApiPublicDownloadRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/update': typeof ApiPublicUpdateRoute
   '/api/public/coupons/$code': typeof ApiPublicCouponsCodeRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/legal/$page': typeof LegalPageRoute
+  '/api/public/download': typeof ApiPublicDownloadRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/update': typeof ApiPublicUpdateRoute
   '/api/public/coupons/$code': typeof ApiPublicCouponsCodeRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-of-service'
     | '/legal/$page'
+    | '/api/public/download'
     | '/api/public/health'
     | '/api/public/update'
     | '/api/public/coupons/$code'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-of-service'
     | '/legal/$page'
+    | '/api/public/download'
     | '/api/public/health'
     | '/api/public/update'
     | '/api/public/coupons/$code'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-of-service'
     | '/legal/$page'
+    | '/api/public/download'
     | '/api/public/health'
     | '/api/public/update'
     | '/api/public/coupons/$code'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   LegalPageRoute: typeof LegalPageRoute
+  ApiPublicDownloadRoute: typeof ApiPublicDownloadRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicUpdateRoute: typeof ApiPublicUpdateRoute
   ApiPublicCouponsCodeRoute: typeof ApiPublicCouponsCodeRoute
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/legal/$page'
       fullPath: '/legal/$page'
       preLoaderRoute: typeof LegalPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/download': {
+      id: '/api/public/download'
+      path: '/api/public/download'
+      fullPath: '/api/public/download'
+      preLoaderRoute: typeof ApiPublicDownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/health': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   LegalPageRoute: LegalPageRoute,
+  ApiPublicDownloadRoute: ApiPublicDownloadRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicUpdateRoute: ApiPublicUpdateRoute,
   ApiPublicCouponsCodeRoute: ApiPublicCouponsCodeRoute,

@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type ReactNode } from "react";
 import { getDownloadCount, recordDownload } from "@/lib/downloads.functions";
-import { APK_URL, INITIAL_DOWNLOADS, formatDownloads } from "@/lib/downloads";
+import { DIRECT_DOWNLOAD_URL, INITIAL_DOWNLOADS, formatDownloads } from "@/lib/downloads";
 
 export function DownloadLink({ children, className, showCount = false }: { children: ReactNode; className?: string; showCount?: boolean }) {
   const queryClient = useQueryClient();
@@ -22,6 +22,6 @@ export function DownloadLink({ children, className, showCount = false }: { child
   };
   return <>
     {showCount && <p aria-live="polite" className="mt-7 text-xs font-medium text-muted-foreground">{formatDownloads(count)} downloads</p>}
-    <a href={APK_URL} download="sanora.apk" rel="noopener" className={className} onClick={track}>{children}</a>
+    <a href={DIRECT_DOWNLOAD_URL} download="sanora-music.apk" className={className} onClick={track}>{children}</a>
   </>;
 }

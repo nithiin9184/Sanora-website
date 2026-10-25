@@ -8,3 +8,4 @@ export function formatDownloads(total: number) {
   return total === INITIAL_DOWNLOADS ? "10.2k" : total.toLocaleString("en-US");
 }
 export const APK_URL = "https://kiisrtoqmrrwqljaafjq.supabase.co/storage/v1/object/public/release/Sanora%206.2.2.apk";
+export const DIRECT_DOWNLOAD_URL = "/api/public/download";
