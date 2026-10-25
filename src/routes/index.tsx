@@ -122,7 +122,7 @@ const brands = [
   ["Amazon Music", logoAmazonMusic],
 ] as const;
 
-const APP_VERSION = "6.1.1";
+const APP_VERSION = "6.2.2";
 
 const guide = [
   ["Download APK Package", "Tap Download App to save the Android application package (APK) directly to your device.", g1],
@@ -191,7 +191,7 @@ function Reviews() {
       {total === 0 && (
         <div className="rounded-xl border border-border/60 bg-card/40 p-6 text-center">
           <p className="text-sm font-medium">Early Beta Community</p>
-          <p className="mt-1 text-xs text-muted-foreground">SANORA v6.1.1 is in open beta. Be the first from the listener community to share your feedback below.</p>
+          <p className="mt-1 text-xs text-muted-foreground">SANORA v6.2.2 is in open beta. Be the first from the listener community to share your feedback below.</p>
         </div>
       )}
       {pages > 1 && (
@@ -256,7 +256,7 @@ function Faq() {
           <span className="font-mono text-sm font-semibold">Version {APP_VERSION}</span>
           <span className="text-xs text-muted-foreground">Release: October 2026</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Version 6.1.1 update featuring 10-band equalizer DSP, gapless track transitions, adaptive player UI, and offline storage caching.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Version 6.2.2 update featuring 10-band equalizer DSP, gapless track transitions, adaptive player UI, and offline storage caching.</p>
       </div>
     </div>
   );

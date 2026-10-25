@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const MANIFEST = {
-  latestVersion: "6.1.1",
+  latestVersion: "6.2.2",
   minSupportedVersion: "1.0.0",
-  apkUrl: "https://kiisrtoqmrrwqljaafjq.supabase.co/storage/v1/object/public/release/SANORA%20MUSIC.apk",
-  releaseDate: "2026-10-24",
+  apkUrl: "https://kiisrtoqmrrwqljaafjq.supabase.co/storage/v1/object/public/release/Sanora%206.2.2.apk",
+  releaseDate: "2026-10-25",
   highlights: [
     "Fast Razorpay UPI Checkout for Google Pay, PhonePe and Paytm",
     "Smart coupon auto-selection with SANORA9184 for Plus 1-Month",
